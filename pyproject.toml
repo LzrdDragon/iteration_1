@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "iteration-1"
+version = "0.1.0"
+description = ""
+authors = ["Dmitrii Avdeev <dmavdeev.dev@gmail.com>"]
+readme = "README.md"
+packages = [{include = "iteration_1"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.89.1"
+aiohttp = "^3.8.3"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.1"
+mypy = "^1.0.0"
+black = "^23.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
