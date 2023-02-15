@@ -1,0 +1,27 @@
+---
+
+# Default compose file for development and production.
+# Should be used directly in development.
+# Automatically loads `docker-compose.override.yml` if it exists.
+# No extra steps required.
+# Should be used together with `docker/docker-compose.prod.yml`
+# in production.
+
+version: "3.10"
+services:
+  web:
+    <<: &web
+      build:
+        context: .
+        dockerfile: ./Dockerfile
+        args:
+          MY_ENV: development
+    command: uvicorn asgi:app --host 0.0.0.0 --port 8000 --workers 1 --reload --log-level debug
+
+  runner:
+    <<: *web
+    command: pytest
+
+networks:
+  # Network for your internals, use it by default:
+  webnet:
