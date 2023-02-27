@@ -1,45 +1,19 @@
-from typing import List
-import uuid
-
-from pydantic.dataclasses import dataclass
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, Field, Extra
 
 
-class Link(BaseModel):
-    link: str
-    _id: uuid.UUID = PrivateAttr(default_factory=uuid.uuid4)
-
+class PydanticConfig(BaseModel):
     class Config:
-        extra = 'forbid'
-
-        schema_extra = {"link": "https://example.ru"}
+        extra = Extra.allow
 
 
-class LinksList(BaseModel):
-    links: List[Link]
-
-    class Config:
-        extra = 'forbid'
-
-        schema_extra = {
-            "links": [
-                {"link": "https://example.ru"},
-                {"link": "https://example.com"}
-            ]
-        }
+class LinksRequest(PydanticConfig):
+    links: list[str] = Field(example=["http://example1.com", "https://example2.com"])
 
 
-class LinkResponse(BaseModel):
+class LinkParsed(PydanticConfig):
     link: str
     title: str
-    _id: uuid.UUID = PrivateAttr(default_factory=uuid.uuid4)
-
-    class Config:
-        extra = 'forbid'
 
 
-class LinksListResponse(BaseModel):
-    links: List[LinkResponse]
-
-    class Config:
-        extra = 'forbid'
+class LinksResponse(PydanticConfig):
+    links: list[LinkParsed]
