@@ -4,6 +4,7 @@ import sys
 from multiprocessing import cpu_count
 from concurrent.futures import ProcessPoolExecutor
 from math import ceil
+import datetime
 
 from fastapi import APIRouter
 
@@ -38,11 +39,14 @@ class URLs(str, enum.Enum):
     response_model=LinksResponse,
 )
 async def post_links(links_list: LinksRequest):
+    start = datetime.datetime.now()
     response = LinksResponse(links=[])
     for link in links_list.links:
         title = await get_title(link)
         link_response = LinkParsed(link=link, title=title)
         response.links.append(link_response)
+    end = datetime.datetime.now()
+    log.info(f"post_links took {end - start} to run on {len(links_list.links)} links")
     return response
 
 
@@ -55,6 +59,7 @@ async def post_links(links_list: LinksRequest):
     response_model=LinksResponse,
 )
 async def post_links_upper(links_list: LinksRequest):
+    start = datetime.datetime.now()
     response = LinksResponse(links=[])
     # how many tasks we can put into each process of a pool
     chunks_size = ceil(len(links_list.links) / cpu_count())
@@ -71,6 +76,8 @@ async def post_links_upper(links_list: LinksRequest):
     for link in temporary_map.keys():
         link_response = LinkParsed(link=link, title=temporary_map[link])
         response.links.append(link_response)
+    end = datetime.datetime.now()
+    log.info(f"post_links_upper took {end - start} to run on {len(links_list.links)} links")
     return response
 
 

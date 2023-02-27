@@ -6,7 +6,7 @@ from multiprocessing import cpu_count
 import aiohttp
 from bs4 import BeautifulSoup
 
-from structlog_config import log
+from iteration_1.structlog_config import log
 
 
 # sync cpu blocking operations
